@@ -45,11 +45,37 @@ def get_months():
 
 # ---------- 更新畫面 ----------
 
+sort_column = "date"   # 目前依哪一欄排序
+sort_reverse = True    # True = 由大到小（日期就是由新到舊）
+
+def sort_value(row, column):
+    """取出這一列要拿來比大小的值"""
+    if column == "amount":
+        return int(row[1]) if row[1].isdigit() else 0
+    index = {"date": 0, "category": 2, "note": 3}[column]
+    return row[index] if len(row) > index else ""
+
+def on_heading_click(column):
+    global sort_column, sort_reverse
+    if column == sort_column:
+        sort_reverse = not sort_reverse
+    else:
+        sort_column = column
+        sort_reverse = column in ("date", "amount")
+    refresh_table()
+
 def refresh_table():
-    """清空表格，再重新把所有紀錄放進去"""
+    for key, title, width, anchor in columns:
+        arrow = ""
+        if key == sort_column:
+            arrow = " ▼" if sort_reverse else " ▲"
+        table.heading(key, text=title + arrow)
+
     table.delete(*table.get_children())
     total = 0
     records = load_records()
+    records.sort(key=lambda row: sort_value(row, sort_column),
+                 reverse=sort_reverse)
     for row in records:
         date, amount, category = row[0], row[1], row[2]
         note = row[3] if len(row) > 3 else ""
@@ -171,7 +197,7 @@ columns = [  # (欄位代號, 標題, 寬度, 對齊)
 table = ttk.Treeview(list_frame, columns=[c[0] for c in columns],
                      show="headings", height=12)
 for key, title, width, anchor in columns:
-    table.heading(key, text=title)
+    table.heading(key, text=title, command=lambda k=key: on_heading_click(k))
     table.column(key, width=width, anchor=anchor)
 table.grid(row=1, column=0)
 
