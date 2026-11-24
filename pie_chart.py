@@ -38,10 +38,27 @@ def draw_pie_chart(filename="expenses.csv", show=True, save_path=None, month=Non
         amount = round(pct * total / 100)
         return f"{pct:.1f}%\n${amount}"
 
+    # 依金額由大到小排序
+    items = sorted(totals.items(), key=lambda item: item[1], reverse=True)
+    labels = [name for name, amount in items]
+    amounts = [amount for name, amount in items]
+
+    # 藍色漸層：最大的最深 (0.9)，最小的最淺 (0.4)
+    n = len(items)
+    colors = [plt.cm.Blues(0.9 - 0.5 * i / max(n - 1, 1)) for i in range(n)]
+
     fig, ax = plt.subplots()
-    ax.pie(totals.values(), labels=totals.keys(), autopct=make_label, startangle=90)
+    wedges, texts, autotexts = ax.pie(
+        amounts, labels=labels, colors=colors,
+        autopct=make_label, startangle=90, counterclock=False,
+        wedgeprops={"edgecolor": "white", "linewidth": 2})
+
+    # 前半（深色）的字用白色，後半（淺色）用黑色
+    for i, text in enumerate(autotexts):
+        text.set_color("white" if i < n / 2 else "black")
+
     title = f"{month} 各類別支出比例" if month else "各類別支出比例"
-    ax.set_title(f"{title}（總計 ${total}）")
+    ax.set_title(f"{title}（總計 ${total}）", pad=20)
     ax.axis("equal")
 
     if save_path:
