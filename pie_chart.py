@@ -30,10 +30,16 @@ def draw_pie_chart(filename="expenses.csv", show=True, save_path=None):
         print("沒有資料可以畫圖。")
         return None
 
+    total = sum(totals.values())
+
+    def make_label(pct):
+        amount = round(pct * total / 100)
+        return f"{pct:.1f}%\n${amount}"
+
     fig, ax = plt.subplots()
     ax.pie(totals.values(), labels=totals.keys(),
-           autopct="%1.1f%%", startangle=90)
-    ax.set_title("各類別支出比例")
+        autopct=make_label, startangle=90)
+    ax.set_title(f"各類別支出比例（總計 ${total}）")
     ax.axis("equal")
 
     if show:
