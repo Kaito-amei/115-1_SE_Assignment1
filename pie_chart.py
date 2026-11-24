@@ -1,4 +1,5 @@
 import csv
+import matplotlib.pyplot as plt
 
 def load_totals(filename="expenses.csv"):
     """讀取 csv，回傳每個類別的總金額，例如 {"餐飲": 120, "交通": 50}"""
@@ -18,5 +19,22 @@ def load_totals(filename="expenses.csv"):
             totals[category] = totals.get(category, 0) + amount
     return totals
 
+def draw_pie_chart(filename="expenses.csv", show=True):
+    """依類別畫出支出圓餅圖，回傳圖片物件 (fig)，方便之後 GUI 使用"""
+    totals = load_totals(filename)
+    if not totals:
+        print("沒有資料可以畫圖。")
+        return None
+
+    fig, ax = plt.subplots()
+    ax.pie(totals.values(), labels=totals.keys(),
+           autopct="%1.1f%%", startangle=90)
+    ax.set_title("各類別支出比例")
+    ax.axis("equal")
+
+    if show:
+        plt.show()
+    return fig
+
 if __name__ == "__main__":
-    print(load_totals())
+    draw_pie_chart()
