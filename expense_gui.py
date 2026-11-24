@@ -2,6 +2,7 @@ import csv
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
+from tkcalendar import DateEntry
 
 # 讓 matplotlib 只負責「畫圖」，不要自己開視窗，視窗交給 tkinter 管
 import matplotlib
@@ -88,8 +89,7 @@ form.grid()
 
 # 輸入欄位
 ttk.Label(form, text="日期").grid(row=0, column=0, sticky="w", pady=4)
-date_entry = ttk.Entry(form, width=24)
-date_entry.insert(0, datetime.today().strftime("%Y-%m-%d"))
+date_entry = DateEntry(form, width=21, date_pattern="yyyy-mm-dd", locale="zh_TW")
 date_entry.grid(row=0, column=1, pady=4)
 
 ttk.Label(form, text="金額").grid(row=1, column=0, sticky="w", pady=4)
