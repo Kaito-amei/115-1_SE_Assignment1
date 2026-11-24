@@ -56,7 +56,7 @@ def main():
     print("---開始記帳---")
 
     while True:
-        t=input("請輸入日期 (YYYY-MM-DD) 或輸入 'q' 退出: ").strip()
+        t=input("請輸入日期 YYYY-MM-DD (輸入Enter可使用今天日期) 或輸入 'q' 退出: ").strip()
         if t.lower() == 'q':
             break
         try:
