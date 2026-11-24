@@ -1,6 +1,7 @@
 import csv
 import tkinter as tk
 from tkinter import ttk, messagebox
+from datetime import datetime
 
 # 讓 matplotlib 只負責「畫圖」，不要自己開視窗，視窗交給 tkinter 管
 import matplotlib
@@ -9,7 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # 月曆選日期（需要先 pip install tkcalendar）
-from tkcalendar import DateEntry
+from tkcalendar import Calendar
 
 from expense_input import (FILENAME, init_file, save_expense,
                            parse_date, parse_amount, parse_category)
@@ -153,6 +154,33 @@ def on_delete(event=None):
     refresh_table()
 
 
+def open_calendar():
+    """按下「月曆」：開一個小視窗，點選日期後填回日期欄位"""
+    # 月曆一打開就顯示目前日期欄位的那一天，欄位格式不對就顯示今天
+    try:
+        current = datetime.strptime(date_entry.get().strip(), "%Y-%m-%d")
+    except ValueError:
+        current = datetime.today()
+
+    popup = tk.Toplevel(root)
+    popup.title("選擇日期")
+    popup.resizable(False, False)
+    popup.transient(root)   # 視窗跟著主視窗，不會跑到後面
+    popup.grab_set()        # 選完日期前不能操作主視窗
+
+    cal = Calendar(popup, selectmode="day", date_pattern="yyyy-mm-dd",
+                   locale="zh_TW", year=current.year, month=current.month,
+                   day=current.day)
+    cal.pack(padx=10, pady=10)
+
+    def on_pick(event):
+        date_entry.delete(0, tk.END)
+        date_entry.insert(0, cal.get_date())
+        popup.destroy()
+
+    cal.bind("<<CalendarSelected>>", on_pick)   # 點了某一天就填回去並關閉
+
+
 def on_show_chart():
     """按下「顯示圓餅圖」：呼叫組員的 draw_pie_chart，畫在新視窗裡"""
     month = month_box.get()
@@ -185,10 +213,14 @@ form = ttk.Frame(root, padding=16)
 form.grid(row=0, column=0, sticky="n")
 
 ttk.Label(form, text="日期").grid(row=0, column=0, sticky="w", pady=4)
-# DateEntry：可以直接打字，也可以點右邊的箭頭用月曆選
-date_entry = DateEntry(form, width=21, date_pattern="yyyy-mm-dd",
-                       locale="zh_TW")
-date_entry.grid(row=0, column=1, pady=4)
+# 日期：可以直接打字，也可以按旁邊的「月曆」按鈕用月曆選
+date_frame = ttk.Frame(form)
+date_frame.grid(row=0, column=1, pady=4, sticky="ew")
+date_entry = ttk.Entry(date_frame, width=16)
+date_entry.insert(0, datetime.today().strftime("%Y-%m-%d"))
+date_entry.pack(side="left")
+ttk.Button(date_frame, text="月曆", width=5,
+           command=open_calendar).pack(side="right")
 
 ttk.Label(form, text="金額").grid(row=1, column=0, sticky="w", pady=4)
 amount_entry = ttk.Entry(form, width=24)
