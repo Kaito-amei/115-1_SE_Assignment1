@@ -6,7 +6,7 @@
 ## 分工
 | 模組 | 檔案 | 負責人 | 分支 |
 |---|---|---|---|
-| 輸入模組 | `expense_input.py` | 1132951莊雅筑 | `input_module`、`gui` |
+| 輸入模組 | `expense_input.py` | 1132951莊雅筑 | `input_module`、`gui`、`feature_delete` |
 | 圓餅圖模組 | `pie_chart.py` | 1132959張芸芸 | `visualization_module`、`feature_pie_enhance` |
 
 ## 檔案說明
@@ -46,6 +46,7 @@ python expense_gui.py
 **支出紀錄列表**
 - 右側列出所有紀錄，下方顯示筆數和總金額
 - 點欄位標題可以切換排序方式（▼ 由大到小、▲ 由小到大）
+- 點選紀錄後按「刪除選取的紀錄」或鍵盤 Delete 鍵可以刪除（可按住 Ctrl 多選，刪除前會再確認一次）
 
 **圓餅圖**
 - 選擇月份（或「全部」），按「顯示圓餅圖」，會在新視窗顯示該月份各類別的支出比例
