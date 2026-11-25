@@ -6,7 +6,7 @@
 ## 分工
 | 模組 | 檔案 | 負責人 | 分支 |
 |---|---|---|---|
-| 輸入模組 | `expense_input.py` | 1132951莊雅筑 | `input_module`、`gui`、`feature_delete` |
+| 輸入模組 | `expense_input.py`、`expense_gui.py` | 1132951莊雅筑 | `input_module`、`gui`、`feature_delete` |
 | 圓餅圖模組 | `pie_chart.py` | 1132959張芸芸 | `visualization_module`、`feature_pie_enhance` |
 
 ## 檔案說明
